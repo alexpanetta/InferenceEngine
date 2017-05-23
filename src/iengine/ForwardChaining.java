@@ -11,10 +11,10 @@ public class ForwardChaining extends Method {
         name = "Forward Chaining";
 
         //initialise variables
-        count = new HashMap<>();
-        inferred = new HashMap<>();
-        agenda = new LinkedList<>();
-        solution = new StringBuilder();
+        Count = new HashMap<>();
+        Inferred = new HashMap<>();
+        Agenda = new LinkedList<>();
+        Solution = new StringBuilder();
     }
 
     @Override
@@ -22,38 +22,39 @@ public class ForwardChaining extends Method {
         InitSolution(kb);
 
         //continue looping until 
-        while (!agenda.isEmpty()) {
-            String p = agenda.remove(0);
+        while (!Agenda.isEmpty()) {
+            String p = Agenda.pop();
 
-            solution.append(p);
-            solution.append(", ");
+            Solution.append(p);
+            Solution.append(", ");
 
-            inferred.put(p, false);
+            Inferred.put(p, false);
 
             //unless inferred[p] execue statement block
-            if (inferred.get(p) != true) {
-                inferred.replace(p, true);
+            if (!Inferred.get(p)) {
+                Inferred.replace(p, true);
 
                 //for each Horn clause i in whose premise p appears do
-                for (String c : count.keySet()) {
+                for (String c : Count.keySet()) {
+
                     //check if premise is in clause
                     if (premiseContains(c, p)) {
 
-                        //decrement count of clause
-                        int temp = count.get(c);
-                        count.replace(c, --temp);
+                        //decrement the count of the clause
+                        int temp = Count.get(c);
+                        Count.replace(c, --temp);
 
-                        if (count.get(c) == 0) {
-                            //get first key of count
+                        if (Count.get(c) == 0) {
+                            //get the head of the clause
                             String head = c.split("=>")[1];
 
                             if (head.equals(query)) {
                                 //we have found the solution
-                                solution.append(query);
-                                return solution.toString();
+                                Solution.append(query);
+                                return Solution.toString();
                             } else {
-                                //keep searching
-                                agenda.add(head);
+                                //keep searching by adding it to the stack
+                                Agenda.add(head);
                             }
                         }
                     }
@@ -61,55 +62,53 @@ public class ForwardChaining extends Method {
             }
         }
 
-        //return null to signal failure to find solution
+        //return null to signal a failure to find solution
         return null;
     }
 
     private boolean premiseContains(String clause, String p) {
         String premise = clause.split("=>")[0];
-        String[] conj = premise.split("&");
+        String[] conjunction = premise.split("&");
 
-        //check if the premise is in the clause
-        if (conj.length == 1) {
+        //check if p is in the premise
+        if (conjunction.length == 1) {
             return premise.equals(p);
         } else {
-            return Arrays.asList(conj).contains(p);
+            return Arrays.asList(conjunction).contains(p);
         }
     }
 
     private void InitSolution(String kb) {
-        String[] sentences = kb.split(";");
-        for (String s : sentences) {
-            s = s.replaceAll("\\s", "");
-            s = s.trim();
-            if (!s.contains("=>")) {
-                agenda.add(s);
-                //add to inferred list with entry initially set to false
-                if (!inferred.containsKey(s)) {
-                    inferred.put(s, false);
-                }
+        //get rid of spaces
+        kb = kb.replaceAll("\\s", "");
+
+        //seperate clauses
+        String[] clauses = kb.split(";");
+
+        for (String clause : clauses) {
+            if (!clause.contains("=>")) {
+                //adds facts to the agenda in order to be processed
+                Agenda.add(clause);
+
+                //add to inferred list with symbol initially set to false
+                Inferred.put(clause, false);
+
             } else {
-                if (!count.containsKey(s)) {
-                    count.put(s, s.split("&").length);
-                }
-                String[] temp = s.split("=>");
+                //add premise along with the number of symbols in the clause
+                Count.put(clause, clause.split("&").length);
 
-                for (String symbol : temp) {
-                    symbol = symbol.replaceAll("\\s", "");
-                    if (symbol.contains("&")) {
+                String[] splitImplication = clause.split("=>");
 
-                        String[] temp1 = symbol.split("&");
-                        for (String sym : temp1) {
-                            sym = sym.replaceAll("\\s", "");
-                            if (!inferred.containsKey(sym)) {
-                                inferred.put(sym, false);
-                            }
+                for (String propSymbol: splitImplication) {
+                    if (propSymbol.contains("&")) {
+                        String[] symbols = propSymbol.split("&");
+
+                        for (String symbol : symbols) {
+                            Inferred.put(symbol, false);
                         }
-
-                    } else {
-                        if (!inferred.containsKey(symbol)) {
-                            inferred.put(symbol, false);
-                        }
+                    }
+                    else {
+                        Inferred.put(clause, false);
                     }
                 }
             }

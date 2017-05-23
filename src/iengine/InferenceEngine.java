@@ -8,7 +8,7 @@ import java.io.IOException;
 class InferenceEngine {
 
     //should be 3- FC, BC and TT
-    public static final int METHOD_COUNT = 1;
+    public static final int METHOD_COUNT = 2;
     public static Method[] methods;
 
     public static void main(String[] args) {
@@ -56,6 +56,7 @@ class InferenceEngine {
     private static void initMethods() {
         methods = new Method[METHOD_COUNT];
         methods[0] = new ForwardChaining();
+        methods[1] = new BackwardChaining();
     }
 
     private static String[] readFile(String fileName) {
