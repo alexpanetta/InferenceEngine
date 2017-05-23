@@ -43,8 +43,12 @@ class InferenceEngine {
 
         //pass kb and query to method to calculate solution
         String thisSolution = thisMethod.Solve(file[0], file[1]);
-
-        System.out.println(thisSolution);
+        
+        if (thisSolution == null) {
+            System.out.println("NO:");
+        }
+        else
+            System.out.println("YES: " + thisSolution);
 
         //get initial kb and store?
     }
