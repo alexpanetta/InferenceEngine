@@ -1,0 +1,64 @@
+package iengine;
+
+import java.util.HashSet;
+
+public class HornClause {
+
+    private String antecedent; //symbol before =>
+    private String consequent; //symbol after =>
+    private HashSet<String> antSymbols; //list of symbols in antecedent
+    private HashSet<String> conSymbols; //list of symbols in consequent
+
+    public HornClause(String ant, String con) {
+        antecedent = ant;
+        consequent = con;
+        antSymbols = new HashSet<String>();
+        conSymbols = new HashSet<String>();
+
+        initialiseSymbols(antecedent, antSymbols);
+        initialiseSymbols(consequent, conSymbols);
+    }
+
+    //Retrieve the first part of the clause, ie the symbol before =>
+    public String getAntecedent() {
+        return antecedent;
+    }
+
+    //Retrieve the first part of the clause, ie the symbol after =>
+    public String getConsequent() {
+        return consequent;
+    }
+
+    //There may be more than one symbol in the antecedent
+    public HashSet<String> getAntSymbols() {
+        return antSymbols;
+    }
+
+    public HashSet<String> getConSymbols() {
+        return conSymbols;
+    }
+
+    //Filter through the KB and store the symbols in their respective fields
+    private void initialiseSymbols(String symbols, HashSet<String> symbolList) {
+        //in case of no consequent
+        if (symbols != null) {
+            if (symbols.contains("&")) {
+                String[] splitSymbols = symbols.split("&");
+                for (int i = 0; i < splitSymbols.length; i++) {
+                    symbolList.add(splitSymbols[i]);
+                }
+            } else {
+                symbolList.add(symbols);
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        if (consequent == null) {
+            return getAntecedent();
+        } else {
+            return getAntecedent() + "=>" + getConsequent();
+        }
+    }
+}
