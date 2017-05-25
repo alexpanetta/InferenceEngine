@@ -1,6 +1,7 @@
 package iengine;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 public abstract class Method {
@@ -12,9 +13,14 @@ public abstract class Method {
     public HashMap<String, Integer> Count;
     public HashMap<String, Boolean> Inferred;
     public LinkedList<String> Agenda;
+    public HashSet<HornClause> KnowledgeBase;   //testing for TT
+    public Integer ValidModels;
     public StringBuilder Solution;
 
     public abstract String Solve(String kb, String query);
+    
+    //Initialising KB
+    //public abstract void InitKB(String kb);        
     
     public void reset() {
         this.Agenda.clear();
