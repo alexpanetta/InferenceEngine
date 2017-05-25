@@ -30,7 +30,9 @@ public class TruthTable extends Method {
         //initialise kb and symbols
         symbols = InitSolution(kb, symbols);
 
-        if (!CheckAll(query, symbols, new HashMap<String, Boolean>())) {
+        CheckAll(query, symbols, new HashMap<String, Boolean>());
+        
+        if (ValidModels == 0) {   
             return null;
         } else {
             //output the number of valid models
@@ -73,9 +75,7 @@ public class TruthTable extends Method {
             rest.remove(p);
 
             //two possible states for symbol to be in (true or false)
-            //return 
-            return (CheckAll(query, rest, Extend(p, true, model)))
-                    && (CheckAll(query, rest, Extend(p, false, model)));
+            return CheckAll(query, rest, Extend(p, true, model)) && CheckAll(query, rest, Extend(p, false, model));
         }
     }
 
@@ -150,8 +150,6 @@ public class TruthTable extends Method {
     private HashSet<String> InitSolution(String kb, HashSet<String> symbols) {
         //remove spaces in the kb sentence
         kb = kb.replaceAll("\\s", "");
-        
-        ValidModels = 0;
 
         InitKB(kb);
         return InitSymbols(kb, symbols);
