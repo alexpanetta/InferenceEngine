@@ -8,7 +8,7 @@ import java.io.IOException;
 class InferenceEngine {
 
     //should be 3- FC, BC and TT
-    public static final int METHOD_COUNT = 2;
+    public static final int METHOD_COUNT = 3;
     public static Method[] methods;
 
     public static void main(String[] args) {
@@ -43,20 +43,19 @@ class InferenceEngine {
 
         //pass kb and query to method to calculate solution
         String thisSolution = thisMethod.Solve(file[0], file[1]);
-        
+
         if (thisSolution == null) {
             System.out.println("NO:");
-        }
-        else
+        } else {
             System.out.println("YES: " + thisSolution);
-
-        //get initial kb and store?
+        }
     }
 
     private static void initMethods() {
         methods = new Method[METHOD_COUNT];
         methods[0] = new ForwardChaining();
         methods[1] = new BackwardChaining();
+        methods[2] = new TruthTable();
     }
 
     private static String[] readFile(String fileName) {
