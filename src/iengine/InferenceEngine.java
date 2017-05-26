@@ -7,7 +7,6 @@ import java.io.IOException;
 
 class InferenceEngine {
 
-    //should be 3- FC, BC and TT
     public static final int METHOD_COUNT = 3;
     public static Method[] methods;
 
