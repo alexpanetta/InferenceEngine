@@ -14,6 +14,8 @@ public class ForwardChaining extends Method {
         Count = new HashMap<>();
         Inferred = new HashMap<>();
         Agenda = new LinkedList<>();
+        
+        //contains current list of entailed symbols
         Solution = new StringBuilder();
     }
 
@@ -66,6 +68,7 @@ public class ForwardChaining extends Method {
         return null;
     }
 
+    //
     private boolean premiseContains(String clause, String p) {
         String premise = clause.split("=>")[0];
         String[] conjunction = premise.split("&");
@@ -78,6 +81,8 @@ public class ForwardChaining extends Method {
         }
     }
 
+    //store facts in agenda
+    //store premises in count with the number of symbols
     private void InitSolution(String kb) {
         //get rid of spaces
         kb = kb.replaceAll("\\s", "");
